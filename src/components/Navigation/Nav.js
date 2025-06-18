@@ -2,6 +2,7 @@ import React from "react";
 import "./Nav.scss";
 import { NavLink } from "react-router-dom";
 
+// Naivigation Bar Component
 const Nav = (props) => {
   return (
     <div className="topnav">
