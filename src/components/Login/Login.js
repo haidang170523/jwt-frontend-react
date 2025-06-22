@@ -9,7 +9,7 @@ const Login = (props) => {
             <div className="brand">lighthouse23_</div>
             <div className="detail">
               lighthouse23_ helps you connect and share with the people in
-              yourlife.
+              yourlife
             </div>
           </div>
           <div className="content-right col-12 col-sm-5 d-flex flex-column gap-3 py-3">
