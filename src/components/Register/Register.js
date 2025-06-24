@@ -1,11 +1,24 @@
 import "./Register.scss";
 import { useHistory } from "react-router-dom";
+import axios from "axios";
+import { useEffect } from "react";
 
 const Register = (props) => {
   let history = useHistory();
   const handleLogin = () => {
     history.push("/login");
   };
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/api/test-api")
+      .then((data) => {
+        console.log("Check data axios: ", data);
+      })
+      .catch((err) => {
+        console.log("Axios error: ", err);
+      });
+  }, [2]);
 
   return (
     <div className="register-container">
