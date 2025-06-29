@@ -1,18 +1,18 @@
 import "./Register.scss";
 import { useHistory } from "react-router-dom";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { registerNewUser } from "../../services/userService";
 
 const Register = (props) => {
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const defaultValidInput = {
     isValidEmail: true,
-    isValidPhone: true,
+    isValidPhoneNumber: true,
     isValidPassword: true,
     isValidConfirmPassword: true,
   };
@@ -36,8 +36,8 @@ const Register = (props) => {
       toast.error("Email is not valid");
       return false;
     }
-    if (!phone) {
-      setObjCheckInput({ ...defaultValidInput, isValidPhone: false });
+    if (!phoneNumber) {
+      setObjCheckInput({ ...defaultValidInput, isValidPhoneNumber: false });
       toast.error("Phone number is required");
       return false;
     }
@@ -54,16 +54,23 @@ const Register = (props) => {
     return true;
   };
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     let check = isValid();
     // Don't declare key in key: value => user value as a key by default
     if (check === true) {
-      axios.post("http://localhost:8080/api/v1/register", {
+      let response = await registerNewUser(
         email,
-        phone,
+        phoneNumber,
         username,
-        password,
-      });
+        password
+      );
+      let serverData = response.data;
+      if (+serverData.EC === 0) {
+        toast.success(serverData.EM);
+        history.push("/login");
+      } else {
+        toast.error(serverData.EM);
+      }
     }
   };
 
@@ -111,13 +118,13 @@ const Register = (props) => {
               <input
                 type="text"
                 className={
-                  objCheckInput.isValidPhone
+                  objCheckInput.isValidPhoneNumber
                     ? "form-control"
                     : "form-control is-invalid"
                 }
-                placeholder="Enter your phone number here"
-                value={phone}
-                onChange={(event) => setPhone(event.target.value)}
+                placeholder="Enter your phoneNumber number here"
+                value={phoneNumber}
+                onChange={(event) => setPhoneNumber(event.target.value)}
               />
             </div>
 
@@ -126,7 +133,7 @@ const Register = (props) => {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Enter your phone number here"
+                placeholder="Enter your phoneNumber number here"
                 value={username}
                 onChange={(event) => setUsername(event.target.value)}
               />
