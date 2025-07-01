@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const registerNewUser = (email, phoneNumber, username, password) => {
+  // In this case: Don't declare key in key: value => user value as a key by default
   return axios.post("http://localhost:8080/api/v1/register", {
     email,
     phoneNumber,

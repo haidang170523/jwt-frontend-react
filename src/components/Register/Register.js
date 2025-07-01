@@ -1,6 +1,6 @@
 import "./Register.scss";
 import { useHistory } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import { registerNewUser } from "../../services/userService";
 
@@ -55,21 +55,18 @@ const Register = (props) => {
   };
 
   const handleRegister = async () => {
-    let check = isValid();
-    // Don't declare key in key: value => user value as a key by default
-    if (check === true) {
+    if (isValid() === true) {
       let response = await registerNewUser(
         email,
         phoneNumber,
         username,
         password
       );
-      let serverData = response.data;
-      if (+serverData.EC === 0) {
-        toast.success(serverData.EM);
+      if (+response.data.EC === 0) {
+        toast.success(response.data.EM);
         history.push("/login");
       } else {
-        toast.error(serverData.EM);
+        toast.error(response.data.EM);
       }
     }
   };
