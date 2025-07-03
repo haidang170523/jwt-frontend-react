@@ -84,7 +84,7 @@ const Register = (props) => {
 
   return (
     <div className="register-container">
-      <div class="container">
+      <div className="container">
         <div className="row px-3 px-sm-0">
           <div className="content-left d-none col-sm-7 d-sm-block">
             <div className="brand">lighthouse23_</div>
