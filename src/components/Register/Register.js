@@ -55,18 +55,26 @@ const Register = (props) => {
   };
 
   const handleRegister = async () => {
-    if (isValid() === true) {
+    if (isValid() !== true) return;
+    try {
       let response = await registerNewUser(
         email,
         phoneNumber,
         username,
         password
       );
-      if (+response.data.EC === 0) {
+
+      if (response && response.data && +response.data.EC === 0) {
         toast.success(response.data.EM);
         history.push("/login");
-      } else {
+      } else if (response && response.data && +response.data.EC !== 0) {
         toast.error(response.data.EM);
+      }
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data.EM);
+      } else {
+        toast.error("Network error");
       }
     }
   };

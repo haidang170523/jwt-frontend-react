@@ -45,8 +45,7 @@ const Login = (props) => {
         sessionStorage.setItem("account", JSON.stringify(data));
         history.push("/users");
         window.location.reload();
-      }
-      if (response && response.data && +response.data.EC !== 0) {
+      } else if (response && response.data && +response.data.EC !== 0) {
         toast.error(response.data.EM);
       }
     }
