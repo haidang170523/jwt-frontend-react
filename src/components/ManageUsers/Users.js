@@ -1,20 +1,29 @@
 import { fetchAllUsers } from "../../services/userService";
 import "./Users.scss";
 import { useEffect, useState } from "react";
+import ReactPaginate from "react-paginate";
 
 const Users = (props) => {
   const [listUsers, setListUsers] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [currentLimit, setCurrentLimit] = useState(3);
+  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [currentPage]);
 
   const fetchUsers = async () => {
-    let response = await fetchAllUsers();
+    let response = await fetchAllUsers(currentPage, currentLimit);
     if (response && response.data && +response.data.EC === 0) {
-      setListUsers(response.data.DT);
-      console.log("Check list users: ", response.data.DT);
+      setTotalPages(response.data.DT.totalPages);
+      setListUsers(response.data.DT.users);
+      console.log(">>> Check data: ", response.data.DT);
     }
+  };
+
+  const handlePageClick = async (event) => {
+    setCurrentPage(+event.selected + 1);
   };
   return (
     <div className="container">
@@ -37,6 +46,7 @@ const Users = (props) => {
                 <th scope="col">Email</th>
                 <th scope="col">Username</th>
                 <th scope="col">Group</th>
+                <th scope="col">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -53,49 +63,48 @@ const Users = (props) => {
                         {/* item.Group not null/undefined, return item.Group.name
                       or return item.Group is undefined and if it.Group?.name
                       is undefined, ?? help return empty string */}
+                        <td>
+                          <button className="btn btn-warning mr-3">Edit</button>
+                          <button className="btn btn-danger">Delete</button>
+                        </td>
                       </tr>
                     );
                   })}
                 </>
               ) : (
                 <>
-                  <span>Not Found Users</span>
+                  <tr>
+                    <td>Not Found Users</td>
+                  </tr>
                 </>
               )}
             </tbody>
           </table>
         </div>
-        <div className="users-footer">
-          <nav aria-label="Page navigation example">
-            <ul className="pagination justify-content-center">
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  Previous
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  1
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  2
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  3
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  Next
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
+        {totalPages > 0 && (
+          <div className="users-footer">
+            <ReactPaginate
+              nextLabel="next >"
+              onPageChange={handlePageClick}
+              pageRangeDisplayed={3}
+              marginPagesDisplayed={2}
+              pageCount={totalPages}
+              previousLabel="< previous"
+              pageClassName="page-item"
+              pageLinkClassName="page-link"
+              previousClassName="page-item"
+              previousLinkClassName="page-link"
+              nextClassName="page-item"
+              nextLinkClassName="page-link"
+              breakLabel="..."
+              breakClassName="page-item"
+              breakLinkClassName="page-link"
+              containerClassName="pagination"
+              activeClassName="active"
+              renderOnZeroPageCount={null}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

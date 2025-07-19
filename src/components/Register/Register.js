@@ -79,6 +79,13 @@ const Register = (props) => {
     }
   };
 
+  const handlePressEnter = (event) => {
+    if (event.key === "Enter") {
+      // event.preventDefault(); // Prevent submit form = enter
+      handleRegister();
+    }
+  };
+
   // useEffect(() => {
   //   axios
   //     .get("http://localhost:8080/api/v1/test-api")
@@ -171,6 +178,7 @@ const Register = (props) => {
                 placeholder="Re-enter your password here"
                 value={confirmPassword}
                 onChange={(event) => setConfirmPassword(event.target.value)}
+                onKeyDown={(event) => handlePressEnter(event)}
               />
             </div>
 
