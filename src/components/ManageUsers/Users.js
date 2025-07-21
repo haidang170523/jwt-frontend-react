@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { toast } from "react-toastify";
 import ModalDelete from "./ModalDelete";
+import ModalAddEdit from "./ModalAddEdit";
 
 const Users = (props) => {
   const [listUsers, setListUsers] = useState([]);
@@ -146,6 +147,7 @@ const Users = (props) => {
         dataModal={dataModal}
         confirmDeleteUser={confirmDeleteUser}
       />
+      <ModalAddEdit title={"Create new user"} />
     </>
   );
 };
