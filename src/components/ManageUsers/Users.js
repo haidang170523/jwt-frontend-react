@@ -12,7 +12,8 @@ const Users = (props) => {
   const [currentLimit, setCurrentLimit] = useState(3);
   const [totalPages, setTotalPages] = useState(0);
   const [showModalDelete, setShowModalDelete] = useState(false);
-  const [dataModal, setDataModal] = useState({});
+  const [dataModalDelete, setDataModalDelete] = useState({});
+  const [showModalUser, setShowModalUser] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -31,12 +32,16 @@ const Users = (props) => {
   };
 
   const handleDeleteUser = (user) => {
-    setDataModal(user);
+    setDataModalDelete(user);
     setShowModalDelete(true);
   };
 
+  const handleAddUser = () => {
+    setShowModalUser(true);
+  };
+
   const confirmDeleteUser = async () => {
-    let response = await deleteUser(dataModal.id);
+    let response = await deleteUser(dataModalDelete.id);
     if (response && +response.data.EC === 0) {
       toast.success(response.data.EM);
       await fetchUsers();
@@ -46,9 +51,13 @@ const Users = (props) => {
     }
   };
 
-  const handleClose = () => {
-    setDataModal({});
+  const handleCloseModalDelete = () => {
+    setDataModalDelete({});
     setShowModalDelete(false);
+  };
+
+  const handleCloseModalUser = () => {
+    setShowModalUser(false);
   };
 
   return (
@@ -59,9 +68,14 @@ const Users = (props) => {
             <div className="title">
               <h3>Table Users</h3>
             </div>
-            <div className="actions">
-              <button className="btn btn-success">Refresh</button>
-              <button className="btn btn-primary">Add User</button>
+            <div className="actions my-3">
+              <button className="btn btn-success me-3 ">Refresh</button>
+              <button
+                className="btn btn-primary"
+                onClick={() => handleAddUser()}
+              >
+                Add User
+              </button>
             </div>
           </div>
           <div className="users-body">
@@ -143,11 +157,15 @@ const Users = (props) => {
       </div>
       <ModalDelete
         show={showModalDelete}
-        handleClose={handleClose}
-        dataModal={dataModal}
+        onHide={handleCloseModalDelete}
+        dataModal={dataModalDelete}
         confirmDeleteUser={confirmDeleteUser}
       />
-      <ModalAddEdit title={"Create new user"} />
+      <ModalAddEdit
+        title={"Create new user"}
+        show={showModalUser}
+        onHide={handleCloseModalUser}
+      />
     </>
   );
 };
