@@ -9,7 +9,7 @@ import ModalAddEdit from "./ModalAddEdit";
 const Users = (props) => {
   const [listUsers, setListUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [currentLimit, setCurrentLimit] = useState(3);
+  const [currentLimit, setCurrentLimit] = useState(6);
   const [totalPages, setTotalPages] = useState(0);
 
   // Modal delete a user
@@ -36,16 +36,15 @@ const Users = (props) => {
     setCurrentPage(+event.selected + 1);
   };
 
-  const handleDeleteUser = (user) => {
-    setDataModalDelete(user);
-    setShowModalDelete(true);
-  };
-
   const handleAddUser = () => {
     setActionModalAddEdit("CREATE");
     setTimeout(() => {
       setShowModalAddEdit(true);
     }, 0);
+  };
+
+  const handleRefresh = async () => {
+    await fetchUsers();
   };
 
   const handleEditUser = (user) => {
@@ -54,6 +53,10 @@ const Users = (props) => {
     setTimeout(() => {
       setShowModalAddEdit(true);
     }, 0);
+  };
+  const handleDeleteUser = (user) => {
+    setDataModalDelete(user);
+    setShowModalDelete(true);
   };
 
   const confirmDeleteUser = async () => {
@@ -83,15 +86,22 @@ const Users = (props) => {
       <div className="container">
         <div className="manage-users-container">
           <div className="users-header">
-            <div className="title">
-              <h3>Table Users</h3>
+            <div className="title mt-3">
+              <h3>Manage Users</h3>
             </div>
             <div className="actions my-3">
-              <button className="btn btn-success me-3 ">Refresh</button>
+              <button
+                className="btn btn-success me-3 "
+                onClick={() => handleRefresh()}
+              >
+                <i class="fa fa-refresh"></i>
+                Refresh
+              </button>
               <button
                 className="btn btn-primary"
                 onClick={() => handleAddUser()}
               >
+                <i class="fa fa-plus-circle"></i>
                 Add User
               </button>
             </div>
@@ -125,18 +135,20 @@ const Users = (props) => {
                       or return item.Group is undefined and if it.Group?.name
                       is undefined, ?? help return empty string */}
                           <td>
-                            <button
-                              className="btn btn-warning mx-3"
+                            <span
+                              title="Edit"
+                              className="edit"
                               onClick={() => handleEditUser(item)}
                             >
-                              Edit
-                            </button>
-                            <button
-                              className="btn btn-danger"
+                              <i class="fa fa-pencil"></i>
+                            </span>
+                            <span
+                              title="Delete"
+                              className="delete"
                               onClick={() => handleDeleteUser(item)}
                             >
-                              Delete
-                            </button>
+                              <i class="fa fa-trash"></i>
+                            </span>
                           </td>
                         </tr>
                       );

@@ -1,6 +1,10 @@
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { fetchAllGroups, createNewUser } from "../../services/userService";
+import {
+  fetchAllGroups,
+  createNewUser,
+  updateUser,
+} from "../../services/userService";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import _ from "lodash";
@@ -52,7 +56,7 @@ const ModalAddEdit = (props) => {
     if (action === "UPDATE") {
       setUserData({
         ...dataModal,
-        groupId: dataModal.groupId ?? "",
+        groupId: dataModal.groupId ?? groups?.[0]?.id ?? "",
       });
     }
   }, [dataModal]);
@@ -64,6 +68,15 @@ const ModalAddEdit = (props) => {
   };
 
   const checkValidInput = () => {
+    if (action === "UPDATE") {
+      if (!userData.groupId) {
+        setValidInput({ ...defaultValidInput, groupId: false });
+        toast.error("Empty input group");
+        return false;
+      }
+      return true;
+    }
+
     setValidInput(defaultValidInput);
     let arr = ["email", "phoneNumber", "password", "groupId"];
     for (let i = 0; i < arr.length; i++) {
@@ -90,10 +103,14 @@ const ModalAddEdit = (props) => {
     return true;
   };
 
-  const handleSaveUser = async () => {
+  const handleConfirmUser = async () => {
     try {
       if (checkValidInput() === true) {
-        let res = await createNewUser(userData);
+        let res =
+          action === "CREATE"
+            ? await createNewUser(userData)
+            : await updateUser(userData);
+
         if (res && res.data && +res.data.EC === 0) {
           toast.success(res.data.EM);
           props.onHide();
@@ -113,10 +130,8 @@ const ModalAddEdit = (props) => {
 
   const handleClose = () => {
     props.onHide();
-    if (action === "CREATE") {
-      setUserData({ ...defaultUserData, groupId: groups?.[0]?.id ?? "" });
-      setValidInput(defaultValidInput);
-    }
+    setUserData({ ...defaultUserData, groupId: groups?.[0]?.id ?? "" });
+    setValidInput(defaultValidInput);
     // setUserData({ ...defaultUserData, groupId: groups[0].id });
     // setValidInput(defaultValidInput);
   };
@@ -241,7 +256,9 @@ const ModalAddEdit = (props) => {
             </label>
             <select
               value={userData.groupId}
-              className="form-select"
+              className={
+                validInput.groupId ? "form-select" : "form-select is-invalid"
+              }
               onChange={(event) =>
                 handleOnChangeInput(event.target.value, "groupId")
               }
@@ -262,7 +279,7 @@ const ModalAddEdit = (props) => {
         <Button variant="secondary" onClick={handleClose}>
           Close
         </Button>
-        <Button variant="primary" onClick={() => handleSaveUser()}>
+        <Button variant="primary" onClick={() => handleConfirmUser()}>
           {action === "CREATE" ? "Save" : "Update"}
         </Button>
       </Modal.Footer>

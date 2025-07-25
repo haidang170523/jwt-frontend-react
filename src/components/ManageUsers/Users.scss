@@ -6,3 +6,19 @@
     }
   }
 }
+
+.manage-users-container {
+  i {
+    padding-right: 7px;
+  }
+  .users-body {
+    .edit {
+      cursor: pointer;
+      padding-right: 10px;
+      padding-left: 10px;
+    }
+    .delete {
+      cursor: pointer;
+    }
+  }
+}
