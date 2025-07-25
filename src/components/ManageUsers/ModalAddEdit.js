@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import _ from "lodash";
 
 const ModalAddEdit = (props) => {
+  const { action, dataModal } = props;
   const defaultUserData = {
     email: "",
     phoneNumber: "",
@@ -47,9 +48,18 @@ const ModalAddEdit = (props) => {
     }
   };
 
-  const handleOnChangeInput = (value, name) => {
+  useEffect(() => {
+    if (action === "UPDATE") {
+      setUserData({
+        ...dataModal,
+        groupId: dataModal.groupId ?? "",
+      });
+    }
+  }, [dataModal]);
+
+  const handleOnChangeInput = (value, key) => {
     let _userData = _.cloneDeep(userData);
-    _userData[name] = value;
+    _userData[key] = value;
     setUserData(_userData);
   };
 
@@ -64,7 +74,6 @@ const ModalAddEdit = (props) => {
         // return false;
 
         // Copy flat and nested object
-
         let _validInput = _.cloneDeep(defaultValidInput);
         _validInput[arr[i]] = false;
         setValidInput(_validInput);
@@ -81,34 +90,49 @@ const ModalAddEdit = (props) => {
     return true;
   };
 
-  const handleConfirmUser = async () => {
+  const handleSaveUser = async () => {
     try {
       if (checkValidInput() === true) {
         let res = await createNewUser(userData);
         if (res && res.data && +res.data.EC === 0) {
           toast.success(res.data.EM);
           props.onHide();
-          setUserData({ ...defaultUserData, groupId: groups[0].id });
+          setUserData({ ...defaultUserData, groupId: groups?.[0]?.id ?? "" });
         } else if (res && res.data && +res.data.EC !== 0) {
           toast.error(res.data.EM);
+          // let _validInput = _.cloneDeep(defaultValidInput);
+          // _validInput[res.data.DT] = false;
+          // setValidInput(_validInput);
+          setValidInput({ ...defaultValidInput, [res.data.DT]: false });
         }
       }
     } catch (error) {
       toast.error(error.response.data.EM);
-      // console.log(">>> Check error: ", error.response.data)
     }
   };
 
-  const onHide = () => {
+  const handleClose = () => {
     props.onHide();
-    setUserData({ ...defaultUserData, groupId: groups[0].id });
+    if (action === "CREATE") {
+      setUserData({ ...defaultUserData, groupId: groups?.[0]?.id ?? "" });
+      setValidInput(defaultValidInput);
+    }
+    // setUserData({ ...defaultUserData, groupId: groups[0].id });
+    // setValidInput(defaultValidInput);
   };
 
   return (
-    <Modal {...props} size="lg" className="modal-add-edit" onHide={onHide}>
+    <Modal
+      {...props}
+      size="lg"
+      className="modal-add-edit"
+      onHide={() => handleClose()}
+    >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          <span>{props.title}</span>
+          <span>
+            {props.action === "CREATE" ? "Create a new user" : "Edit a user"}
+          </span>
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -122,6 +146,7 @@ const ModalAddEdit = (props) => {
                 validInput.email ? "form-control" : "form-control is-invalid"
               }
               type="email"
+              disabled={action === "CREATE" ? false : true}
               value={userData.email}
               onChange={(event) =>
                 handleOnChangeInput(event.target.value, "email")
@@ -140,6 +165,7 @@ const ModalAddEdit = (props) => {
                   : "form-control is-invalid"
               }
               type="text"
+              disabled={action === "CREATE" ? false : true}
               value={userData.phoneNumber}
               onChange={(event) =>
                 handleOnChangeInput(event.target.value, "phoneNumber")
@@ -160,19 +186,25 @@ const ModalAddEdit = (props) => {
           </div>
 
           <div className="col-12 col-sm-6 mb-3">
-            <label>
-              Password (<span className="red">*</span>) :
-            </label>
-            <input
-              className={
-                validInput.password ? "form-control" : "form-control is-invalid"
-              }
-              type="password"
-              value={userData.password}
-              onChange={(event) =>
-                handleOnChangeInput(event.target.value, "password")
-              }
-            />
+            {action === "CREATE" && (
+              <>
+                <label>
+                  Password (<span className="red">*</span>) :
+                </label>
+                <input
+                  className={
+                    validInput.password
+                      ? "form-control"
+                      : "form-control is-invalid"
+                  }
+                  type="password"
+                  value={userData.password}
+                  onChange={(event) =>
+                    handleOnChangeInput(event.target.value, "password")
+                  }
+                />
+              </>
+            )}
           </div>
 
           <div className="col-12 mb-3">
@@ -190,6 +222,7 @@ const ModalAddEdit = (props) => {
           <div className="col-12 col-sm-6 mb-3">
             <label>Gender:</label>
             <select
+              value={userData.sex}
               className="form-select"
               onChange={(event) =>
                 handleOnChangeInput(event.target.value, "sex")
@@ -207,6 +240,7 @@ const ModalAddEdit = (props) => {
               Group (<span className="red">*</span>) :
             </label>
             <select
+              value={userData.groupId}
               className="form-select"
               onChange={(event) =>
                 handleOnChangeInput(event.target.value, "groupId")
@@ -225,11 +259,11 @@ const ModalAddEdit = (props) => {
         </div>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={onHide}>
+        <Button variant="secondary" onClick={handleClose}>
           Close
         </Button>
-        <Button variant="primary" onClick={() => handleConfirmUser()}>
-          Save
+        <Button variant="primary" onClick={() => handleSaveUser()}>
+          {action === "CREATE" ? "Save" : "Update"}
         </Button>
       </Modal.Footer>
     </Modal>

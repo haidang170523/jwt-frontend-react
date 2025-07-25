@@ -6,10 +6,10 @@ const ModalDelete = (props) => {
     <>
       <Modal {...props} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Confirm Delete User</Modal.Title>
+          <Modal.Title>Confirm Delete A User</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure you want to delete user: {props.dataModal.email} ?
+          Are you sure you want to delete this user: {props.dataModal.email} ?
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={props.onHide}>

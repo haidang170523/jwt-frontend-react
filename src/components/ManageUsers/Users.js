@@ -11,9 +11,15 @@ const Users = (props) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentLimit, setCurrentLimit] = useState(3);
   const [totalPages, setTotalPages] = useState(0);
+
+  // Modal delete a user
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [dataModalDelete, setDataModalDelete] = useState({});
-  const [showModalUser, setShowModalUser] = useState(false);
+
+  // Modal create/update a user
+  const [showModalAddEdit, setShowModalAddEdit] = useState(false);
+  const [actionModalAddEdit, setActionModalAddEdit] = useState("CREATE");
+  const [dataModalAddEdit, setDataModalAddEdit] = useState({});
 
   useEffect(() => {
     fetchUsers();
@@ -26,7 +32,6 @@ const Users = (props) => {
       setListUsers(response.data.DT.users);
     }
   };
-
   const handlePageClick = (event) => {
     setCurrentPage(+event.selected + 1);
   };
@@ -37,7 +42,18 @@ const Users = (props) => {
   };
 
   const handleAddUser = () => {
-    setShowModalUser(true);
+    setActionModalAddEdit("CREATE");
+    setTimeout(() => {
+      setShowModalAddEdit(true);
+    }, 0);
+  };
+
+  const handleEditUser = (user) => {
+    setActionModalAddEdit("UPDATE");
+    setDataModalAddEdit(user);
+    setTimeout(() => {
+      setShowModalAddEdit(true);
+    }, 0);
   };
 
   const confirmDeleteUser = async () => {
@@ -52,12 +68,14 @@ const Users = (props) => {
   };
 
   const handleCloseModalDelete = () => {
-    setDataModalDelete({});
     setShowModalDelete(false);
+    setDataModalDelete({});
   };
 
-  const handleCloseModalUser = () => {
-    setShowModalUser(false);
+  const handleCloseModalAddEdit = async () => {
+    setShowModalAddEdit(false);
+    setDataModalAddEdit({});
+    await fetchUsers();
   };
 
   return (
@@ -96,7 +114,9 @@ const Users = (props) => {
                     {listUsers.map((item, index) => {
                       return (
                         <tr key={item.id}>
-                          <td>{index + 1}</td>
+                          <td>
+                            {(currentPage - 1) * currentLimit + index + 1}
+                          </td>
                           <td>{item.id}</td>
                           <td>{item.email}</td>
                           <td>{item.username}</td>
@@ -105,7 +125,10 @@ const Users = (props) => {
                       or return item.Group is undefined and if it.Group?.name
                       is undefined, ?? help return empty string */}
                           <td>
-                            <button className="btn btn-warning mx-3">
+                            <button
+                              className="btn btn-warning mx-3"
+                              onClick={() => handleEditUser(item)}
+                            >
                               Edit
                             </button>
                             <button
@@ -162,9 +185,10 @@ const Users = (props) => {
         confirmDeleteUser={confirmDeleteUser}
       />
       <ModalAddEdit
-        title={"Create new user"}
-        show={showModalUser}
-        onHide={handleCloseModalUser}
+        show={showModalAddEdit}
+        onHide={handleCloseModalAddEdit}
+        action={actionModalAddEdit}
+        dataModal={dataModalAddEdit}
       />
     </>
   );
