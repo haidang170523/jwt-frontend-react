@@ -64,18 +64,14 @@ const Register = (props) => {
         password
       );
 
-      if (response && response.data && +response.data.EC === 0) {
-        toast.success(response.data.EM);
+      if (response && +response.EC === 0) {
+        toast.success(response.EM);
         history.push("/login");
-      } else if (response && response.data && +response.data.EC !== 0) {
-        toast.error(response.data.EM);
+      } else if (response && +response.EC !== 0) {
+        toast.error(response.EM);
       }
     } catch (error) {
-      if (error.response) {
-        toast.error(error.response.data.EM);
-      } else {
-        toast.error("Network error");
-      }
+      toast.error(error.EM);
     }
   };
 

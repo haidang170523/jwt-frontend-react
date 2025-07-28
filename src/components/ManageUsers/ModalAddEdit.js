@@ -40,15 +40,15 @@ const ModalAddEdit = (props) => {
 
   const fetchGroups = async () => {
     let res = await fetchAllGroups();
-    if (res && res.data && +res.data.EC === 0) {
-      let groupsData = res.data.DT;
+    if (res && +res.EC === 0) {
+      let groupsData = res.DT;
       setGroups(groupsData);
-      if (res.data.DT && res.data.DT.length > 0) {
+      if (res.DT && res.DT.length > 0) {
         // set is a async func --> use: groupsData instead of groups in state
         setUserData({ ...userData, groupId: groupsData[0].id });
       }
     } else {
-      toast.error(res.data.EM);
+      toast.error(res.EM);
     }
   };
 
@@ -111,20 +111,20 @@ const ModalAddEdit = (props) => {
             ? await createNewUser(userData)
             : await updateUser(userData);
 
-        if (res && res.data && +res.data.EC === 0) {
-          toast.success(res.data.EM);
+        if (res && +res.EC === 0) {
+          toast.success(res.EM);
           props.onHide();
           setUserData({ ...defaultUserData, groupId: groups?.[0]?.id ?? "" });
-        } else if (res && res.data && +res.data.EC !== 0) {
-          toast.error(res.data.EM);
+        } else if (res && +res.EC !== 0) {
+          toast.error(res.EM);
           // let _validInput = _.cloneDeep(defaultValidInput);
-          // _validInput[res.data.DT] = false;
+          // _validInput[res.DT] = false;
           // setValidInput(_validInput);
-          setValidInput({ ...defaultValidInput, [res.data.DT]: false });
+          setValidInput({ ...defaultValidInput, [res.DT]: false });
         }
       }
     } catch (error) {
-      toast.error(error.response.data.EM);
+      toast.error(error.EM);
     }
   };
 

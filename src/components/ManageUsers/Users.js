@@ -27,9 +27,10 @@ const Users = (props) => {
 
   const fetchUsers = async () => {
     let response = await fetchAllUsers(currentPage, currentLimit);
-    if (response && response.data && +response.data.EC === 0) {
-      setTotalPages(response.data.DT.totalPages);
-      setListUsers(response.data.DT.users);
+    console.log(">>> Check response: ", response);
+    if (response && +response.EC === 0) {
+      setTotalPages(response.DT.totalPages);
+      setListUsers(response.DT.users);
     }
   };
   const handlePageClick = (event) => {
@@ -61,12 +62,12 @@ const Users = (props) => {
 
   const confirmDeleteUser = async () => {
     let response = await deleteUser(dataModalDelete.id);
-    if (response && +response.data.EC === 0) {
-      toast.success(response.data.EM);
+    if (response && +response.EC === 0) {
+      toast.success(response.EM);
       await fetchUsers();
       setShowModalDelete(false);
     } else {
-      toast.error(response.data.EM);
+      toast.error(response.EM);
     }
   };
 
@@ -94,14 +95,14 @@ const Users = (props) => {
                 className="btn btn-success me-3 "
                 onClick={() => handleRefresh()}
               >
-                <i class="fa fa-refresh"></i>
+                <i className="fa fa-refresh"></i>
                 Refresh
               </button>
               <button
                 className="btn btn-primary"
                 onClick={() => handleAddUser()}
               >
-                <i class="fa fa-plus-circle"></i>
+                <i className="fa fa-plus-circle"></i>
                 Add User
               </button>
             </div>
@@ -140,14 +141,14 @@ const Users = (props) => {
                               className="edit"
                               onClick={() => handleEditUser(item)}
                             >
-                              <i class="fa fa-pencil"></i>
+                              <i className="fa fa-pencil"></i>
                             </span>
                             <span
                               title="Delete"
                               className="delete"
                               onClick={() => handleDeleteUser(item)}
                             >
-                              <i class="fa fa-trash"></i>
+                              <i className="fa fa-trash"></i>
                             </span>
                           </td>
                         </tr>
