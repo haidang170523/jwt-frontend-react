@@ -70,7 +70,7 @@ instance.interceptors.response.use(
       // generic api error (server related) unexpected
       default: {
         toast.error("Something went wrong. Please try again later.");
-        return Promise.reject({ message: "Network error" });
+        return Promise.reject(error.response?.data);
       }
     }
   }
