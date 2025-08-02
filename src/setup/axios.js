@@ -69,7 +69,7 @@ instance.interceptors.response.use(
 
       // generic api error (server related) unexpected
       default: {
-        toast.error("Something went wrong. Please try again later.");
+        toast.error(error.response.data.EM);
         return Promise.reject(error.response?.data);
       }
     }

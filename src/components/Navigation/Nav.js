@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
 import "./Nav.scss";
-import { NavLink } from "react-router-dom";
-import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import { NavLink, useLocation } from "react-router-dom";
 
 // Naivigation Bar Component
 const Nav = (props) => {
-  const [isShow, setIsShow] = useState(true);
+  const [isShow, setIsShow] = useState(false);
   let location = useLocation();
   useEffect(() => {
     if (location.pathname === "/login" || location.pathname === "/register") {
       setIsShow(false);
+    } else {
+      setIsShow(true);
     }
-  }, []);
+  }, [location]);
 
   return (
     <>

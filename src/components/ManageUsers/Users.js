@@ -1,10 +1,11 @@
 import { fetchAllUsers, deleteUser } from "../../services/userService";
 import "./Users.scss";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import ReactPaginate from "react-paginate";
 import { toast } from "react-toastify";
 import ModalDelete from "./ModalDelete";
 import ModalAddEdit from "./ModalAddEdit";
+import { UserContext } from "../../context/UserContext";
 
 const Users = (props) => {
   const [listUsers, setListUsers] = useState([]);
@@ -24,6 +25,9 @@ const Users = (props) => {
   useEffect(() => {
     fetchUsers();
   }, [currentPage]);
+
+  // const { user } = useContext(UserContext);
+  // console.log(">>> Check user: ", user);
 
   const fetchUsers = async () => {
     let response = await fetchAllUsers(currentPage, currentLimit);
@@ -190,18 +194,23 @@ const Users = (props) => {
           )}
         </div>
       </div>
-      <ModalDelete
-        show={showModalDelete}
-        onHide={handleCloseModalDelete}
-        dataModal={dataModalDelete}
-        confirmDeleteUser={confirmDeleteUser}
-      />
-      <ModalAddEdit
-        show={showModalAddEdit}
-        onHide={handleCloseModalAddEdit}
-        action={actionModalAddEdit}
-        dataModal={dataModalAddEdit}
-      />
+
+      {showModalDelete && (
+        <ModalDelete
+          show={showModalDelete}
+          onHide={handleCloseModalDelete}
+          dataModal={dataModalDelete}
+          confirmDeleteUser={confirmDeleteUser}
+        />
+      )}
+      {showModalAddEdit && (
+        <ModalAddEdit
+          show={showModalAddEdit}
+          onHide={handleCloseModalAddEdit}
+          action={actionModalAddEdit}
+          dataModal={dataModalAddEdit}
+        />
+      )}
     </>
   );
 };

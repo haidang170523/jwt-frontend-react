@@ -11,11 +11,6 @@ const AppRoutes = (props) => {
   return (
     <>
       <Switch>
-        {/* <Route path="/project">project</Route>
-        <Route path="/users">
-          <Users />
-        </Route> */}
-
         <PrivateRoutes path="/users" component={Users} />
         <PrivateRoutes path="/projects" component={Projects} />
         <Route exact path="/">

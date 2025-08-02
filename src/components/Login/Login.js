@@ -1,10 +1,12 @@
 import "./Login.scss";
 import { useHistory } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { toast } from "react-toastify";
 import { loginUser } from "../../services/userService";
+import { UserContext } from "../../context/UserContext";
 
 const Login = (props) => {
+  const { loginContext } = useContext(UserContext);
   const [valueLogin, setValueLogin] = useState("");
   const [password, setPassword] = useState("");
   const defaultValidInput = {
@@ -34,20 +36,30 @@ const Login = (props) => {
   };
 
   const handleLogin = async () => {
-    if (isValid() === true) {
-      let response = await loginUser(valueLogin, password);
-      if (response && +response.EC === 0) {
-        toast.success(response.EM);
-        let data = {
-          isAuthenticated: true,
-          token: "fake token",
-        };
-        sessionStorage.setItem("account", JSON.stringify(data));
-        history.push("/users");
-        window.location.reload();
-      } else if (response&& +response.EC !== 0) {
-        toast.error(response.EM);
-      }
+    if (!isValid()) return;
+
+    // response login
+    let response = await loginUser(valueLogin, password);
+    if (!response) return;
+
+    if (+response.EC === 0) {
+      toast.success(response.EM);
+      let data = {
+        isAuthenticated: true,
+        token: response.DT.accessToken,
+        account: {
+          groupWithRoles: response.DT.groupWithRoles,
+          email: response.DT.email,
+          username: response.DT.username,
+        },
+      };
+      sessionStorage.setItem("account", JSON.stringify(data));
+      loginContext(data);
+      history.push("/users");
+      // window.location.reload();
+      // console.log(">>> Data from server: ", data);
+    } else {
+      toast.error(response.EM);
     }
   };
 
