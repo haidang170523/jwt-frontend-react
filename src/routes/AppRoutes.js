@@ -14,13 +14,16 @@ const AppRoutes = (props) => {
         <PrivateRoutes path="/users" component={Users} />
         <PrivateRoutes path="/projects" component={Projects} />
         <Route exact path="/">
-          home
+          Home
         </Route>
         <Route path="/login">
           <Login />
         </Route>
         <Route path="/register">
           <Register />
+        </Route>
+        <Route exact path="/about">
+          About
         </Route>
         <Route path="*">404 Not Found</Route>
       </Switch>
