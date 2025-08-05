@@ -1,15 +1,18 @@
 import { createContext, useEffect, useState } from "react";
-import { getUserAccount } from "../services/userService";
+import { getUserInfor } from "../services/userService";
 
 const UserContext = createContext(null);
 
 const UserProvider = (props) => {
+  const nonSecurePaths = ["/", "/login", "/about"];
   // User is the name of the "data" that gets stored in context
-  const [user, setUser] = useState({
+  const defaultUser = {
+    isLoading: true,
     isAuthenticated: false,
     token: "",
     account: {},
-  });
+  };
+  const [user, setUser] = useState(defaultUser);
 
   // Login updates the user data with a name parameter
   const loginContext = (userData) => {
@@ -19,6 +22,7 @@ const UserProvider = (props) => {
   // Logout updates the user data to default
   const logoutContext = () => {
     setUser((user) => ({
+      isLoading: true,
       isAuthenticated: false,
       token: "",
       account: {},
@@ -26,9 +30,11 @@ const UserProvider = (props) => {
   };
 
   const fetchUser = async () => {
-    let response = await getUserAccount();
+    let response = await getUserInfor();
     if (response && response.EC === 0) {
+      // alert("Me");
       let data = {
+        isLoading: false,
         isAuthenticated: true,
         token: response.DT.accessToken,
         account: {
@@ -38,11 +44,19 @@ const UserProvider = (props) => {
         },
       };
       setUser(data);
+    } else {
+      // alert("Alo");
+      setUser({ ...defaultUser, isLoading: false });
     }
-    // console.log(">>> Check data from server", response);
   };
 
-  useEffect(() => fetchUser(), []);
+  useEffect(() => {
+    if (!nonSecurePaths.includes(window.location.pathname)) {
+      fetchUser();
+    } else {
+      setUser({ ...defaultUser, isLoading: false });
+    }
+  }, []);
 
   return (
     <UserContext.Provider value={{ user, loginContext, logoutContext }}>

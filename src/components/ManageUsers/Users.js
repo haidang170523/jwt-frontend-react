@@ -5,7 +5,6 @@ import ReactPaginate from "react-paginate";
 import { toast } from "react-toastify";
 import ModalDelete from "./ModalDelete";
 import ModalAddEdit from "./ModalAddEdit";
-import { UserContext } from "../../context/UserContext";
 
 const Users = (props) => {
   const [listUsers, setListUsers] = useState([]);

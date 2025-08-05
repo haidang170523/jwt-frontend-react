@@ -1,6 +1,6 @@
 import "./Login.scss";
 import { useHistory } from "react-router-dom";
-import { useEffect, useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { toast } from "react-toastify";
 import { loginUser } from "../../services/userService";
 import { UserContext } from "../../context/UserContext";
@@ -45,6 +45,7 @@ const Login = (props) => {
     if (+response.EC === 0) {
       toast.success(response.EM);
       let data = {
+        isLoading: false,
         isAuthenticated: true,
         token: response.DT.accessToken,
         account: {

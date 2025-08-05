@@ -38,39 +38,39 @@ instance.interceptors.response.use(
       case 401: {
         toast.error("Unauthorized user, please login!");
         // window.location.href = "/login";
-        return Promise.reject(error.response?.data);
+        return error.response?.data;
       }
 
       // forbidden (permission related issues)
       case 403: {
         toast.error(error.response.data.EM);
-        return Promise.reject(error.response?.data);
+        return error.response?.data;
       }
 
       // bad request
       case 400: {
-        return Promise.reject(error.response?.data);
+        return error.response?.data;
       }
 
       // not found
       case 404: {
-        return Promise.reject(error.response?.data);
+        return error.response?.data;
       }
 
       // conflict
       case 409: {
-        return Promise.reject(error.response?.data);
+        return error.response?.data;
       }
 
       // unprocessable
       case 422: {
-        return Promise.reject(error.response?.data);
+        return error.response?.data;
       }
 
       // generic api error (server related) unexpected
       default: {
         toast.error(error.response.data.EM);
-        return Promise.reject(error.response?.data);
+        return error.response?.data;
       }
     }
   }
