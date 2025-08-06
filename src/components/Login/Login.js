@@ -54,6 +54,7 @@ const Login = (props) => {
           username: response.DT.username,
         },
       };
+      localStorage.setItem("jwt", data.token);
       loginContext(data);
       history.push("/users");
     } else {
