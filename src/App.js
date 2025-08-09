@@ -1,5 +1,5 @@
 import "./App.scss";
-import Nav from "./components/Navigation/Nav";
+import Navigation from "./components/Navigation/Navigation";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ToastContainer, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -22,7 +22,7 @@ function App() {
         ) : (
           <>
             <div className="app-header">
-              <Nav />
+              <Navigation />
             </div>
             <div className="app-container">
               <AppRoutes />

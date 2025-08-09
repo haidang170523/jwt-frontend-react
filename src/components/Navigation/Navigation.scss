@@ -1,0 +1,76 @@
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+
+  a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+  }
+
+  a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+
+  a.active {
+    background-color: #04aa6d;
+    color: white;
+  }
+}
+
+.nav-header {
+  .bg-header {
+    background-color: #232730;
+
+    .dropdown-menu {
+      background-color: #232730;
+      border: none;
+      .dropdown-item {
+        color: white;
+        &:hover {
+          background-color: #333;
+          color: rgb(88 196 220);
+        }
+      }
+    }
+
+    .navbar-brand {
+      .brand-name {
+        color: rgb(88 196 220);
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      img {
+        animation: spin 18s linear infinite;
+      }
+    }
+
+    .nav-link {
+      &.active {
+        color: rgb(88 196 220) !important;
+      }
+    }
+
+    .nav-text {
+      color: white !important;
+      align-self: center;
+    }
+
+    a {
+      color: white !important;
+      &:hover {
+        color: rgb(88 196 220) !important;
+      }
+    }
+  }
+}
