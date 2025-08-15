@@ -2,14 +2,19 @@ import "./Navigation.scss";
 import { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { UserContext } from "../../context/UserContext";
-import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import {
+  Link,
+  useLocation,
+  useHistory,
+} from "react-router-dom/cjs/react-router-dom.min";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import logo from "../../image/logo.svg";
+import { logoutUser } from "../../services/userService";
+import { toast } from "react-toastify";
 
-// Naivigation Bar Component
 const Navigation = (props) => {
   // const [isShow, setIsShow] = useState(false);
   // let location = useLocation();
@@ -22,11 +27,29 @@ const Navigation = (props) => {
   // }, [location]);
 
   const location = useLocation();
-  const { user } = useContext(UserContext);
+  const { user, logoutContext } = useContext(UserContext);
+  const nonNavPaths = ["/login", "/register", "/logout"];
+  const history = useHistory();
+
+  const handleLogout = async () => {
+    try {
+      let res = await logoutUser();
+      if (res && +res.EC === 0) {
+        localStorage.removeItem("jwt");
+        logoutContext();
+        toast.success(res.EM);
+        history.push("/login");
+      } else {
+        toast.error(res.EM);
+      }
+    } catch (error) {
+      toast.error("An error occurred while logging out");
+      console.error(error);
+    }
+  };
   if (
     (user && user.isAuthenticated === true) ||
-    location.pathname === "/" ||
-    location.pathname === "/about"
+    !nonNavPaths.includes(location.pathname)
   ) {
     return (
       <>
@@ -60,17 +83,23 @@ const Navigation = (props) => {
                   </NavLink>
                 </Nav>
                 <Nav>
-                  <Nav.Item className="nav-text me-auto">
-                    Welcome lighthouse23_ !
-                  </Nav.Item>
-                  <NavDropdown title="⚙ Settings" id="basic-nav-dropdown">
-                    <NavDropdown.Item href="#action/3.1">
-                      Change Password
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="#action/3.2">
-                      Log Out
-                    </NavDropdown.Item>
-                  </NavDropdown>
+                  {user && user.isAuthenticated === true ? (
+                    <>
+                      <Nav.Item className="nav-text me-auto">
+                        Welcome {user.account.username} !
+                      </Nav.Item>
+                      <NavDropdown title="⚙ Settings" id="basic-nav-dropdown">
+                        <NavDropdown.Item>Change Password</NavDropdown.Item>
+                        <NavDropdown.Item onClick={handleLogout}>
+                          Logout
+                        </NavDropdown.Item>
+                      </NavDropdown>
+                    </>
+                  ) : (
+                    <Link to="/login" className="nav-link">
+                      Login
+                    </Link>
+                  )}
                 </Nav>
               </Navbar.Collapse>
             </Container>

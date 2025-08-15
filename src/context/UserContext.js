@@ -4,7 +4,7 @@ import { getUserInfor } from "../services/userService";
 const UserContext = createContext(null);
 
 const UserProvider = (props) => {
-  const nonSecurePaths = ["/", "/login", "/about"];
+  const nonSecurePaths = ["/", "/login", "/about", "/register"];
   // User is the name of the "data" that gets stored in context
   const defaultUser = {
     isLoading: true,
@@ -21,18 +21,12 @@ const UserProvider = (props) => {
 
   // Logout updates the user data to default
   const logoutContext = () => {
-    setUser((user) => ({
-      isLoading: true,
-      isAuthenticated: false,
-      token: "",
-      account: {},
-    }));
+    setUser({ ...defaultUser, isLoading: false });
   };
 
   const fetchUser = async () => {
     let response = await getUserInfor();
     if (response && response.EC === 0) {
-      // alert("Me");
       let data = {
         isLoading: false,
         isAuthenticated: true,
@@ -45,7 +39,6 @@ const UserProvider = (props) => {
       };
       setUser(data);
     } else {
-      // alert("Alo");
       setUser({ ...defaultUser, isLoading: false });
     }
   };

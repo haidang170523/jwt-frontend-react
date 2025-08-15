@@ -46,20 +46,24 @@ const ModalAddEdit = (props) => {
       if (res.DT && res.DT.length > 0) {
         // set is a async func --> use: groupsData instead of groups in state
         setUserData({ ...userData, groupId: groupsData[0].id });
+        console.log("groupsData: ", groupsData);
       }
     } else {
       toast.error(res.EM);
     }
   };
 
+  //
   useEffect(() => {
-    if (action === "UPDATE") {
+    if (action === "UPDATE" && dataModal) {
       setUserData({
         ...dataModal,
         groupId: dataModal.groupId ?? groups?.[0]?.id ?? "",
       });
+    } else if (action === "CREATE") {
+      setUserData({ ...defaultUserData, groupId: groups?.[0]?.id ?? "" });
     }
-  }, [dataModal]);
+  }, [dataModal, action, groups]);
 
   const handleOnChangeInput = (value, key) => {
     let _userData = _.cloneDeep(userData);
@@ -117,10 +121,12 @@ const ModalAddEdit = (props) => {
           setUserData({ ...defaultUserData, groupId: groups?.[0]?.id ?? "" });
         } else if (res && +res.EC !== 0) {
           toast.error(res.EM);
+          setValidInput({ ...defaultValidInput, [res.DT]: false });
+
+          //Other option:
           // let _validInput = _.cloneDeep(defaultValidInput);
           // _validInput[res.DT] = false;
           // setValidInput(_validInput);
-          setValidInput({ ...defaultValidInput, [res.DT]: false });
         }
       }
     } catch (error) {
@@ -132,8 +138,6 @@ const ModalAddEdit = (props) => {
     props.onHide();
     setUserData({ ...defaultUserData, groupId: groups?.[0]?.id ?? "" });
     setValidInput(defaultValidInput);
-    // setUserData({ ...defaultUserData, groupId: groups[0].id });
-    // setValidInput(defaultValidInput);
   };
 
   return (

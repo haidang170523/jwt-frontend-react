@@ -17,6 +17,10 @@ const loginUser = (valueLogin, password) => {
   });
 };
 
+const logoutUser = () => {
+  return axios.post("/api/v1/logout");
+};
+
 const fetchAllUsers = (page, limit) => {
   return axios.get(`/api/v1/user/read?page=${page}&limit=${limit}`);
 };
@@ -46,6 +50,7 @@ const getUserInfor = () => {
 export {
   registerNewUser,
   loginUser,
+  logoutUser,
   fetchAllUsers,
   deleteUser,
   fetchAllGroups,
