@@ -73,10 +73,13 @@ const Navigation = (props) => {
                     Home
                   </NavLink>
                   <NavLink to="/users" className="nav-link">
-                    Users
+                    User
+                  </NavLink>
+                  <NavLink to="/roles" className="nav-link">
+                    Role
                   </NavLink>
                   <NavLink to="/projects" className="nav-link">
-                    Projects
+                    Project
                   </NavLink>
                   <NavLink to="/about" className="nav-link">
                     About

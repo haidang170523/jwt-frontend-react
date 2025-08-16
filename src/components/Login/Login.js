@@ -39,8 +39,6 @@ const Login = (props) => {
     if (!isValid()) return;
 
     // response login
-    console.log(">>> Check valueLogin: ", valueLogin);
-    console.log(">>> Check password: ", password);
     let response = await loginUser(valueLogin, password);
     if (!response) return;
 

@@ -25,9 +25,6 @@ const Users = (props) => {
     fetchUsers();
   }, [currentPage]);
 
-  // const { user } = useContext(UserContext);
-  // console.log(">>> Check user: ", user);
-
   const fetchUsers = async () => {
     let response = await fetchAllUsers(currentPage, currentLimit);
     if (response && +response.EC === 0) {
