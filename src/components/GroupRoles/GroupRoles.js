@@ -1,5 +1,9 @@
 import { fetchAllGroups } from "../../services/userService";
-import { fetchAllRoles, fetchRolesByGroup } from "../../services/roleService";
+import {
+  fetchAllRoles,
+  fetchRolesByGroup,
+  assignRolesToGroup,
+} from "../../services/roleService";
 import "./GroupRoles.scss";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
@@ -9,7 +13,7 @@ const GroupRoles = () => {
   const [groups, setGroups] = useState([]);
   const [listRoles, setListRoles] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState({});
-  const [assignedRoles, setAssignedRoles] = useState([]);
+  // const [listRoles, setListRoles] = useState([]);
 
   useEffect(() => {
     getAllGroups();
@@ -45,7 +49,7 @@ const GroupRoles = () => {
         ...item,
         isAssigned: res.DT.Roles?.some((role) => role.id === item.id) || false,
       }));
-      setAssignedRoles(dataToUpdate);
+      setListRoles(dataToUpdate);
     } else if (res && +res.EC !== 0) {
       toast.error(res.EM);
     } else {
@@ -62,13 +66,34 @@ const GroupRoles = () => {
   };
 
   const handleOnChangeRole = (roleId) => {
-    let _assignedRoles = _.cloneDeep(assignedRoles);
-    let foundIndex = _assignedRoles.findIndex((item) => item.id === +roleId);
-    // console.log(">>> Check index: ", foundIndex);
-    _assignedRoles[foundIndex].isAssigned =
-      !_assignedRoles[foundIndex].isAssigned;
-    // console.log(">>> Check assignedRoles: ", _assignedRoles);
-    setAssignedRoles(_assignedRoles);
+    let _listRoles = _.cloneDeep(listRoles);
+    let foundIndex = _listRoles.findIndex((item) => item.id === +roleId);
+    _listRoles[foundIndex].isAssigned = !_listRoles[foundIndex].isAssigned;
+    setListRoles(_listRoles);
+  };
+
+  const buildDataToAssign = () => {
+    let result = {};
+    result.groupId = selectedGroup.id;
+    const _listRoles = _.cloneDeep(listRoles);
+    let assignedRoles = _listRoles.filter((item) => item.isAssigned === true);
+    result.Roles = assignedRoles.map((item) => {
+      return { groupId: selectedGroup.id, roleId: item.id };
+    });
+    // console.log(">>> Check result: ", result);
+    return result;
+  };
+
+  const handleSave = async () => {
+    let dataToAssign = buildDataToAssign();
+    let res = await assignRolesToGroup(dataToAssign);
+    if (res && +res.EC === 0) {
+      toast.success(res.EM);
+    } else if (res && +res.EC !== 0) {
+      toast.error(res.EM);
+    } else {
+      toast.error("An error happened when assigning roles!");
+    }
   };
 
   return (
@@ -106,9 +131,9 @@ const GroupRoles = () => {
             <>
               <div className="list-roles">
                 <h5>Assign Roles: </h5>
-                {assignedRoles &&
-                  assignedRoles.length > 0 &&
-                  assignedRoles.map((item) => {
+                {listRoles &&
+                  listRoles.length > 0 &&
+                  listRoles.map((item) => {
                     return (
                       <div className="form-check" key={item.id}>
                         <input
@@ -130,7 +155,9 @@ const GroupRoles = () => {
               </div>
 
               <div className="mt-3">
-                <button className="btn btn-primary">Save</button>
+                <button className="btn btn-primary" onClick={handleSave}>
+                  Save
+                </button>
               </div>
             </>
           )}
