@@ -2,7 +2,7 @@ import { useEffect, useState, useImperativeHandle, forwardRef } from "react";
 import { fetchAllRoles, deleteRole } from "../../services/roleService";
 import { toast } from "react-toastify";
 
-const TableRole = forwardRef((props, ref) => {
+const TableRoles = forwardRef((props, ref) => {
   const [listRoles, setListRoles] = useState([]);
 
   useEffect(() => {
@@ -53,7 +53,7 @@ const TableRole = forwardRef((props, ref) => {
         <tbody>
           {listRoles && listRoles.length > 0 ? (
             <>
-              {listRoles.map((item, index) => {
+              {listRoles.map((item) => {
                 return (
                   <tr key={item.id}>
                     <td>{item.id}</td>
@@ -92,4 +92,4 @@ const TableRole = forwardRef((props, ref) => {
   );
 });
 
-export default TableRole;
+export default TableRoles;

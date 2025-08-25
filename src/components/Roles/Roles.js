@@ -4,7 +4,7 @@ import _ from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-toastify";
 import { createRoles } from "../../services/roleService";
-import TableRole from "./TableRole";
+import TableRoles from "./TableRoles";
 
 const Roles = () => {
   const defaultRoles = { url: "", description: "", isValid: true };
@@ -147,7 +147,7 @@ const Roles = () => {
         <hr />
         <div className="mt-3 table-role">
           <h4>List Current Roles: </h4>
-          <TableRole ref={childRef} />
+          <TableRoles ref={childRef} />
         </div>
       </div>
     </div>

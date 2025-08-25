@@ -78,6 +78,9 @@ const Navigation = (props) => {
                   <NavLink to="/roles" className="nav-link">
                     Role
                   </NavLink>
+                  <NavLink to="/group-roles" className="nav-link">
+                    Group-Role
+                  </NavLink>
                   <NavLink to="/projects" className="nav-link">
                     Project
                   </NavLink>
