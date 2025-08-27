@@ -1,11 +1,11 @@
 import "./Navigation.scss";
 import { useContext } from "react";
-import { NavLink } from "react-router-dom";
 import { UserContext } from "../../context/UserContext";
 import {
   Link,
   useLocation,
   useHistory,
+  NavLink,
 } from "react-router-dom/cjs/react-router-dom.min";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
@@ -16,19 +16,9 @@ import { logoutUser } from "../../services/userService";
 import { toast } from "react-toastify";
 
 const Navigation = (props) => {
-  // const [isShow, setIsShow] = useState(false);
-  // let location = useLocation();
-  // useEffect(() => {
-  //   if (location.pathname === "/login" || location.pathname === "/register") {
-  //     setIsShow(false);
-  //   } else {
-  //     setIsShow(true);
-  //   }
-  // }, [location]);
-
   const location = useLocation();
   const { user, logoutContext } = useContext(UserContext);
-  const nonNavPaths = ["/login", "/register", "/logout"];
+  const nonNavPaths = ["/login", "/register"];
   const history = useHistory();
 
   const handleLogout = async () => {
@@ -56,12 +46,13 @@ const Navigation = (props) => {
         <div className="nav-header">
           <Navbar expand="lg" className="bg-header">
             <Container>
-              <Navbar.Brand href="#home">
+              <Navbar.Brand as={Link} to="/">
                 <img
                   src={logo}
                   width="30"
                   height="30"
                   className="d-inline-block align-top"
+                  alt="React Logo"
                 />
                 {"  "}
                 <span className="brand-name">React</span>

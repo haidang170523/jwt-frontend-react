@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { getUserInfor } from "../services/userService";
+import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 
 const UserContext = createContext(null);
 
@@ -13,6 +14,7 @@ const UserProvider = (props) => {
     account: {},
   };
   const [user, setUser] = useState(defaultUser);
+  const location = useLocation();
 
   // Login updates the user data with a name parameter
   const loginContext = (userData) => {
@@ -44,12 +46,17 @@ const UserProvider = (props) => {
   };
 
   useEffect(() => {
-    if (!nonSecurePaths.includes(window.location.pathname)) {
+    const token = localStorage.getItem("jwt");
+    if (token) {
       fetchUser();
     } else {
-      setUser({ ...defaultUser, isLoading: false });
+      if (!nonSecurePaths.includes(location.pathname)) {
+        fetchUser();
+      } else {
+        setUser({ ...defaultUser, isLoading: false });
+      }
     }
-  }, []);
+  }, [location.pathname]);
 
   return (
     <UserContext.Provider value={{ user, loginContext, logoutContext }}>

@@ -1,6 +1,6 @@
 import "./Register.scss";
 import { useHistory } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { registerNewUser } from "../../services/userService";
 
@@ -19,6 +19,13 @@ const Register = (props) => {
   const [objCheckInput, setObjCheckInput] = useState(defaultValidInput);
 
   let history = useHistory();
+  useEffect(() => {
+    const token = localStorage.getItem("jwt");
+    if (token) {
+      history.push("/");
+    }
+  }, []);
+
   const handleLogin = () => {
     history.push("/login");
   };
@@ -77,21 +84,9 @@ const Register = (props) => {
 
   const handlePressEnter = (event) => {
     if (event.key === "Enter") {
-      // event.preventDefault(); // Prevent submit form = enter
       handleRegister();
     }
   };
-
-  // useEffect(() => {
-  //   axios
-  //     .get("http://localhost:8080/api/v1/test-api")
-  //     .then((data) => {
-  //       console.log("Check data axios: ", data);
-  //     })
-  //     .catch((err) => {
-  //       console.log("Axios error: ", err);
-  //     });
-  // }, []);
 
   return (
     <div className="register-container">

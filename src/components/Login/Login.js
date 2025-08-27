@@ -1,9 +1,9 @@
 import "./Login.scss";
-import { useHistory } from "react-router-dom";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { toast } from "react-toastify";
 import { loginUser } from "../../services/userService";
 import { UserContext } from "../../context/UserContext";
+import { Link, useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 const Login = (props) => {
   const { loginContext } = useContext(UserContext);
@@ -16,6 +16,13 @@ const Login = (props) => {
   const [objCheckInput, setObjCheckInput] = useState(defaultValidInput);
 
   let history = useHistory();
+  useEffect(() => {
+    const token = localStorage.getItem("jwt");
+    if (token) {
+      history.push("/");
+    }
+  }, []);
+
   const handleCreateNewAccount = () => {
     history.push("/register");
   };
@@ -74,7 +81,10 @@ const Login = (props) => {
       <div className="container">
         <div className="row px-3 px-sm-0">
           <div className="content-left d-none col-sm-7 d-sm-block">
-            <div className="brand">lighthouse23_</div>
+            {/* <div className="brand">lighthouse23_</div> */}
+            <Link className="brand" to="/">
+              lighthouse23_
+            </Link>
             <div className="detail">
               lighthouse23_ helps you connect and share with the people in your
               life
@@ -113,7 +123,9 @@ const Login = (props) => {
                 Forgot your password
               </a>
             </span>
+
             <hr />
+
             <div className="text-center">
               <button
                 className="btn btn-success"
@@ -121,6 +133,12 @@ const Login = (props) => {
               >
                 Create new account
               </button>
+              <div className="mt-3 return">
+                <Link to="/">
+                  <i className="fa fa-arrow-circle-left" />
+                  <span>Return to Home Page</span>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
