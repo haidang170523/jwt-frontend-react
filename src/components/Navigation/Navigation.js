@@ -51,7 +51,7 @@ const Navigation = (props) => {
                   src={logo}
                   width="30"
                   height="30"
-                  className="d-inline-block align-top"
+                  classsame="d-inline-block align-top"
                   alt="React Logo"
                 />
                 {"  "}
