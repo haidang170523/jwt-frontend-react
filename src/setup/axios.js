@@ -40,6 +40,7 @@ instance.interceptors.response.use(
       // authentication (token related issues)
       case 401: {
         toast.error("Unauthorized user, please login!");
+        localStorage.removeItem("jwt");
         return error.response?.data;
       }
 

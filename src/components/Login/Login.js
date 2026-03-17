@@ -6,7 +6,7 @@ import { UserContext } from "../../context/UserContext";
 import { Link, useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 const Login = (props) => {
-  const { loginContext } = useContext(UserContext);
+  const { user, loginContext } = useContext(UserContext);
   const [valueLogin, setValueLogin] = useState("");
   const [password, setPassword] = useState("");
   const defaultValidInput = {
@@ -17,8 +17,7 @@ const Login = (props) => {
 
   let history = useHistory();
   useEffect(() => {
-    const token = localStorage.getItem("jwt");
-    if (token) {
+    if (user && user.isAuthenticated === true) {
       history.push("/");
     }
   }, []);
