@@ -1,65 +1,126 @@
-# JWT Auth & RBAC React Frontend
+# Corporate JWT-Auth RBAC Frontend
 
-This is the frontend counterpart of the JWT Auth and Role-Based Access Control (RBAC) system. It provides an administrative dashboard to manage users, roles, and group roles securely using JSON Web Tokens (JWT).
+[![React Version](https://img.shields.io/badge/react-17.0.2-blue.svg)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## 🚀 Features
+A robust, enterprise-ready administrative dashboard for managing users, roles, and group permissions through a secure JSON Web Token (JWT) infrastructure.
 
-- **Authentication:** Login and Register flows.
-- **Protected Routes:** Secure pages using higher-order components or private routes (`<PrivateRoutes />`).
-- **User Management:** View, paginate, add, edit, and delete users (`/users`).
-- **Role Management:** Manage individual roles and permissions (`/roles`).
-- **Group Roles Management:** Manage role groups (`/group-roles`).
-- **Responsive UI:** Built with React Bootstrap and plain CSS/SCSS.
-- **Notifications:** Integrated `react-toastify` for user feedback.
+---
 
-## 🛠️ Technology Stack
+## Table of Contents
 
-- **Framework:** React 17
-- **Routing:** React Router v5
-- **Styling:** Bootstrap 5, React-Bootstrap, FontAwesome, SASS
-- **HTTP Client:** Axios
-- **State Management:** React Context API (`UserContext`)
-- **Other Utilities:** lodash, react-paginate, react-toastify, react-loader-spinner
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Technology Stack](#technology-stack)
+- [Architecture & Flow](#architecture--flow)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Configuration](#configuration)
+- [Project Structure](#project-structure)
+- [Security & Authentication](#security--authentication)
+- [Scripts](#scripts)
+- [License](#license)
 
-## 📁 Project Structure
+---
 
-```text
-src/
-├── components/       # Reusable UI components and main views (Login, Register, Users, Roles, etc.)
-├── context/          # React Context providers (e.g., UserContext for auth state)
-├── routes/           # Application routing (AppRoutes, PrivateRoutes)
-├── services/         # API integration via axios (userService, roleService)
-└── setup/            # Axios interceptors or central configurations
+## Overview
+
+This application serves as the frontend for a sophisticated identity management system. It enables administrators to perform granular Role-Based Access Control (RBAC) operations while ensuring secure session management via JWT. Built with performance and scalability in mind, it utilizes React's Context API for global state and Axios for interceptor-based API communication.
+
+## Key Features
+
+*   **Advanced RBAC Management:** Granular control over users, individual roles, and role groups.
+*   **Secure Authentication:** Complete Login and Registration flows with persistent session handling.
+*   **Dynamic Routing:** Integrated private route protection based on authentication and authorization states.
+*   **Data Pagination:** High-performance user listing with server-side pagination support.
+*   **Toast Notifications:** Real-time feedback for all CRUD operations using `react-toastify`.
+*   **Responsive Design:** Mobile-first approach using React-Bootstrap.
+*   **Axios Middleware:** Automated handling of token attachment and error response normalization via interceptors.
+
+## Technology Stack
+
+| Category | Technology |
+| :--- | :--- |
+| **Core Framework** | React 17 |
+| **Routing** | React Router v5 |
+| **State Management** | React Context API |
+| **Styling** | Bootstrap 5, SCSS, Font Awesome |
+| **API Client** | Axios |
+| **Form Utilities** | Lodash, UUID |
+| **UI Components** | React-Bootstrap, React Paginate, React Loader Spinner |
+
+## Architecture & Flow
+
+### Authentication Logic
+```mermaid
+graph TD
+    A[User Inputs Credentials] --> B[Axios Post /login]
+    B --> C{Backend Validates}
+    C -- Success --> D[Backend Returns JWT]
+    C -- Failure --> E[Notify User]
+    D --> F[Axios Interceptor Saves Token]
+    F --> G[Update UserContext]
+    G --> H[Redirect to Dashboard]
 ```
 
-## ⚙️ Getting Started
+## Getting Started
 
 ### Prerequisites
 
-- Node.js (v14 or higher recommended)
-- npm or yarn
+*   **Node.js**: v14.0.0+
+*   **npm**: v6.0.0+
 
 ### Installation
 
-1. Install dependencies:
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd jwt-frontend-react
+   ```
+
+2. Install dependencies:
    ```bash
    npm install
    ```
 
-2. Start the development server:
-   ```bash
-   npm start
-   ```
+### Configuration
 
-3. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Create a `.env` file in the root directory based on `.env.example`:
 
-### Available Scripts
+```bash
+REACT_APP_BACKEND_URL=http://localhost:8080/api/v1
+```
 
-- `npm start`: Runs the app in development mode.
-- `npm test`: Launches the test runner.
-- `npm run build`: Builds the app for production to the `build` folder.
-- `npm run eject`: Ejects the Create React App configuration.
+## Project Structure
 
-## 🔒 Authentication Flow
+```text
+src/
+├── components/       # Feature-based UI components (Login, Users, etc.)
+├── context/          # Global state management using Context API
+├── image/            # Static assets and images
+├── routes/           # Routing logic and route protection components
+├── services/         # API abstraction layer (Axios services)
+├── setup/            # Axial interceptors and global configurations
+├── App.js            # Main application component & routes entry
+└── index.js          # Entry point of the React application
+```
 
-The application uses JWT-based authentication. Upon a successful login, the server returns a token which is saved (usually as an HTTP-only cookie). All subsequent requests to private endpoints use this token for authorization. The `UserContext` maintains the current user's authentication and loading states globally throughout the app.
+## Security & Authentication
+
+*   **JWT Persistence:** Tokens are securely handled via HTTP-only cookies (recommended backend implementation) or automated Axios state.
+*   **Interceptors:** All outgoing requests are intercepted to check for session validity, and incoming responses (401/403) trigger automated logout or refresh flows.
+*   **Private Routes:** Access to administrative pages is guarded by the `<PrivateRoutes />` component, ensuring unauthorized users are redirected.
+
+## Scripts
+
+*   `npm start`: Runs the app in development mode at `http://localhost:3000`.
+*   `npm run build`: Compiles the application for production in the `build/` folder.
+*   `npm test`: Launches the interactive test runner.
+
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+© 2026 JWT RBAC Project. All rights reserved.
